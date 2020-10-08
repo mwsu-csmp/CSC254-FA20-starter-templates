@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /** represents a single tile on a board that can hold a single player (or none) */
 public class Tile {
 
@@ -30,7 +32,7 @@ public class Tile {
     private final int row;
     private final int col;
     private final char symbol;
-    private Player player = null;
+    private final ArrayList<Player> players = new ArrayList<>();
 
     public Tile(int row, int col, char symbol) {
         this.row = row;
@@ -54,7 +56,12 @@ public class Tile {
 
     /** returns the player occupying this tile */
     public Player getOccupant() {
-        return player;
+        return players.size() > 0 ? players.get(0) : null;
+    }
+
+    /** returns the player occupying this tile */
+    public ArrayList<Player> getOccupants() {
+        return players;
     }
 
     /** determines whether or not a player is occupying this tile */
@@ -64,16 +71,18 @@ public class Tile {
 
     /** the given player will occupy the tile if possible */
     public void occupy(Player player) {
-        if(canBeOccupied()) {
-            this.player = player;
+        if(player.willOccupy(this)) {
+            this.players.add(player);
         }
+    }
+
+    public boolean contains(Player player) {
+        return players.contains(player);
     }
 
     /** if this given player is occupying this tile, it will become unoccupied */
     public void leaveTile(Player player) {
-        if(getOccupant() == player) {
-            this.player = null;
-        }
+        this.players.remove(player);
     }
 
 
